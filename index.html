@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Monster Slayer</h1>
+    </header>
+    <div id="game">
+      <section id="monster" class="container">
+        <h2>Monster Health</h2>
+        <div class="healthbar">
+          <div class="healthbar__value" :style="{width: monsterHealth + '%'}"></div>
+        </div>
+      </section>
+      <section id="player" class="container">
+        <h2>Your Health</h2>
+        <div class="healthbar">
+          <div class="healthbar__value" :style="{width: playerHealth + '%'}"></div>
+        </div>
+      </section>
+
+      <section class="container" v-if="winner">
+        <h2>Game Over!</h2>
+        <h3 v-if="winner === 'draw'">its a draw &#128528;</h3>
+        <h3 v-else-if="winner === 'player'">You Won &#128512;</h3>
+        <h3 v-else>You Lost &#128542;</h3>
+        <button @click="startOver">Start New Game</button>
+      </section>
+
+      <section id="controls" v-else>
+        <button @click="attackmonster">ATTACK</button>
+        <button @click="specialattack" :disabled="round % 3 !==0">SPECIAL ATTACK</button>
+        <button @click="healplayer">HEAL</button>
+        <button @click="surrender">SURRENDER</button>
+      </section>
+      
+      <section id="log" class="container">
+        <h2>Battle Log</h2>
+        <ul>
+          <li v-for="l in log">
+            <span :class="{'log--player': l.by === 'player', 'log--monster': l.by === 'monster'}">{{l.by === 'player' ? 'Player' : 'Monster'}}</span>
+            <span>
+              <span v-if="l.type === 'heal'"> heals himself for <span class="log--heal">{{l.value}}</span></span>
+              <span v-if="l.type === 'attack'"> attacks for <span class="log--damage">{{l.value}}</span></span>
+              <span v-if="l.type === 'Special-attack'"> special attacks for <span class="log--damage">{{l.value}}</span></span>
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>
